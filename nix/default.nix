@@ -17,13 +17,15 @@ let
               packages.ghci.flags.ghci = pkgs.lib.mkForce true;
               # This fixes a performance issue, probably https://gitlab.haskell.org/ghc/ghc/issues/15524
               packages.ghcide.configureFlags = [ "--enable-executable-dynamic" ];
+              # Since GHC 8.8. Fix available but not released: https://github.com/blamario/monoid-subclasses/commit/2d3641af4b47fd448cc7c57940cb97c185cf0678
+              packages.monoid-subclasses.components.library.doHaddock = pkgs.lib.mkForce false;
             })];
           };
       mkHieCore = args@{...}:
         let packages = mkPackages args;
         in packages.ghcide.components.exes.ghcide // { inherit packages; };
     in { export = {
-          # ghcide-ghc881 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc881; stackYaml = "stack88.yaml"; };
+          ghcide-ghc882 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc882; stackYaml = "stack88.yaml"; };
           ghcide-ghc865 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc865; stackYaml = "stack.yaml"; };
           ghcide-ghc864 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc864; stackYaml = "stack.yaml"; };
           ghcide-ghc844 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc844; stackYaml = "stack84.yaml"; };
