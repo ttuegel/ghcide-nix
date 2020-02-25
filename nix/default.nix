@@ -1,7 +1,7 @@
-{ sources ? import ./sources.nix
-, system ? builtins.currentSystem
+{ system ? builtins.currentSystem
 }:
 let
+  sources = import ./sources.nix;
   haskellnix = import sources."haskell.nix";
   overlay = _: pkgs:
     let
@@ -22,21 +22,15 @@ let
       mkHieCore = args@{...}:
         let packages = mkPackages args;
         in packages.ghcide.components.exes.ghcide // { inherit packages; };
-    in { export = {
+    in {
           # ghcide-ghc881 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc881; stackYaml = "stack88.yaml"; };
           ghcide-ghc865 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc865; stackYaml = "stack.yaml"; };
           ghcide-ghc864 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc864; stackYaml = "stack.yaml"; };
           ghcide-ghc844 = mkHieCore { ghc = pkgs.haskell-nix.compiler.ghc844; stackYaml = "stack84.yaml"; };
           hie-bios = (mkPackages { ghc = pkgs.haskell-nix.compiler.ghc865; stackYaml = "stack.yaml"; }).hie-bios.components.exes.hie-bios;
-         };
-
-         devTools = {
-           inherit (import sources.niv {}) niv;
-         };
       };
 in
-import sources.nixpkgs {
+{
   overlays = haskellnix.overlays ++ [ overlay ];
   config = haskellnix.config // {};
-  inherit system;
 }
