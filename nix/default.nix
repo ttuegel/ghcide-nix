@@ -1,7 +1,7 @@
-{ system ? builtins.currentSystem
+{ sources ? import ./sources.nix
+, system ? builtins.currentSystem
 }:
 let
-  sources = import ./sources.nix;
   haskellnix = import sources."haskell.nix";
   overlay = _: pkgs:
     let
