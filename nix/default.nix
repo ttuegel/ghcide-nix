@@ -1,8 +1,9 @@
 { sources ? import ./sources.nix
 , system ? builtins.currentSystem
+, haskell-nix ? import sources."haskell.nix"
 }:
 let
-  haskellnix = import sources."haskell.nix";
+  haskellnix = haskell-nix;
   overlay = _: pkgs:
     let
       mkPackages = { ghc, stackYaml }:
